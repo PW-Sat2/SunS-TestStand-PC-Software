@@ -1,0 +1,6 @@
+malg_xy_enableäCp
+malg_xy_disableäCp
+malg_xy_encoder_step_deg
+äCp
+malg_y_set_ref_posäCp
+malg_x_set_ref_posäCp
