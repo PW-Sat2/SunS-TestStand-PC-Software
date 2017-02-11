@@ -29,21 +29,44 @@ class Stand:
         command_file.close()
 
     def enableMotors(self):
-        self.com_stand.write(self.commands[0] + "\r")
+        text = self.commands[0] + "\r"
+        self.com_stand.write(text.encode())
         time.sleep(0.1)
 
     def disableMotors(self):
-        self.com_stand.write(self.commands[1] + "\r")
+        text = self.commands[1] + "\r"
+        self.com_stand.write(text.encode())
         time.sleep(0.1)
 
     def goToAPosition(self, x, y):
-        self.com_stand.write(self.commands[2] + " " + str(x*10000) + " " + str(y*10000) + self.commands[3] + "\r")
-        print(self.com_stand.readline())
-        print(self.com_stand.readline())
+        text = self.commands[2] + " " + str(x*10000) + " " + str(y*10000) + self.commands[3] + "\r"
+        self.com_stand.write(text.encode())
+        self.com_stand.readline()
+        self.com_stand.readline()
+        time.sleep(0.1)
+
+    def goToXPosition(self, x):
+        text = self.commands[7] + " " + str(x*10000) + self.commands[3] + "\r"
+        self.com_stand.write(text.encode())
+        self.com_stand.readline()
+        self.com_stand.readline()
+        time.sleep(0.1)
+
+    def goToYPosition(self, y):
+        text = self.commands[8] + " " + str(y*10000) + self.commands[3] + "\r"
+        self.com_stand.write(text.encode())
+        self.com_stand.readline()
+        self.com_stand.readline()
         time.sleep(0.1)
 
     def setXReferencePosition(self):
-        self.com_stand.write(self.commands[5] + "\r")
+        text = self.commands[5] + "\r"
+        self.com_stand.write(text.encode())
 
     def setYReferencePosition(self):
-        self.com_stand.write(self.commands[4] + "\r")
+        text = self.commands[4] + "\r"
+        self.com_stand.write(text.encode())
+
+    def setXYReferencePosition(self):
+        text = self.commands[6] + "\r"
+        self.com_stand.write(text.encode())

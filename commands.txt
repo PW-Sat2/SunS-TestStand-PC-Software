@@ -4,3 +4,6 @@
 äCp
 malg_y_set_ref_posäCp
 malg_x_set_ref_posäCp
+malg_xy_set_ref_posäCp
+malg_x_encoder_step_deg
+malg_y_encoder_step_deg
