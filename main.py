@@ -5,8 +5,8 @@ from TestStand import *
 
 MOCK = False
 start_x = 0
-stop_x = 900
-step_x = 100
+stop_x = 300
+step_x = 150
 
 start_y = 0
 stop_y = 3600
@@ -31,7 +31,6 @@ if __name__ == '__main__':
         serialStand = Serial("stand")
 
     stand = Stand(serialStand)
-    #'192.168.1.106'
     suns = SunS(2, 0, '192.168.1.106', 23)
     rcv = suns.connect()
     print(rcv)
@@ -45,7 +44,6 @@ if __name__ == '__main__':
     #time.sleep(100)
 
     stand.setXYReferencePosition()
-    #stand.goToAPosition(0, -step_y)
 
     for x in range(start_x, stop_x+step_x, step_x):
         for y in range(start_y, stop_y+step_y, step_y):
@@ -57,16 +55,17 @@ if __name__ == '__main__':
                 stand.goToAPosition(x, step_y)
 
             stand.setYReferencePosition()
-            print("Done \r")
+            print("Done setting angle " + str(x/10.0) + " " + str(y/10.0) + "\r")
             time.sleep(0.1)
 
             SunS_result = suns.measure()
-            #print(SunS_result)
+            print(SunS_result.strip())
             log.writelines(str(time.strftime("%H:%M:%S")) + ";" + str(x) + ";" + str(y) + ";" + SunS_result.strip() + "\r")
             log.flush()
     log.close()
 
+    print("Moving back to start position!\r")
     stand.goToAPosition(0, 0)
-    #stand.disableMotors()
+
     print("All done!\r")
     suns.close()

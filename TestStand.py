@@ -41,23 +41,17 @@ class Stand:
     def goToAPosition(self, x, y):
         text = self.commands[2] + " " + str(x*10000) + " " + str(y*10000) + self.commands[3] + "\r"
         self.com_stand.write(text.encode())
-        self.com_stand.readline()
-        self.com_stand.readline()
-        time.sleep(0.1)
-
-    def goToXPosition(self, x):
-        text = self.commands[7] + " " + str(x*10000) + self.commands[3] + "\r"
-        self.com_stand.write(text.encode())
-        self.com_stand.readline()
-        self.com_stand.readline()
-        time.sleep(0.1)
-
-    def goToYPosition(self, y):
-        text = self.commands[8] + " " + str(y*10000) + self.commands[3] + "\r"
-        self.com_stand.write(text.encode())
-        self.com_stand.readline()
-        self.com_stand.readline()
-        time.sleep(0.1)
+        self.com_stand.flushInput()
+        cnt = 0
+        while True:
+            cnt += 1
+            res = self.com_stand.readline().strip()
+            if cnt > 5:
+                print("Cannot find ACK from the stand \r")
+                break;
+            if res.find('command_done'.encode()) != -1:
+                break;
+        time.sleep(0.01)
 
     def setXReferencePosition(self):
         text = self.commands[5] + "\r"
