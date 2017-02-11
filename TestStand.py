@@ -46,12 +46,15 @@ class Stand:
         while True:
             cnt += 1
             res = self.com_stand.readline().strip()
+            print(res.strip())
             if cnt > 5:
                 print("Cannot find ACK from the stand \r")
-                break;
+                time.sleep(5)
+                self.goToAPosition(self, x, y)
+
             if res.find('command_done'.encode()) != -1:
-                break;
-        time.sleep(0.01)
+                break
+        time.sleep(0.1)
 
     def setXReferencePosition(self):
         text = self.commands[5] + "\r"
