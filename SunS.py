@@ -22,4 +22,3 @@ class SunS:
         self.esp_socket.send(data_to_send.encode())
         rcv_data = self.esp_socket.makefile().readline().strip()
         return rcv_data
-
