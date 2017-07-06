@@ -8,10 +8,11 @@ if MOCK is True:
             self.com = com
 
         def write(self, data):
-            print(self.com + ": " + str(data) + "\r")
+            print("write data!") #print(self.com + ": " + str(data) + "\r")
 
         def readline(self):
-            return self.com + ": " + "read data!" + "\r"
+            data = self.com + ": " + "read data!" + "\r"
+            return data.encode()
 
         def flushInput(self):
             return "ok"
@@ -49,22 +50,25 @@ class Stand:
         return x*((1.8/32.0)/20.0)
 
     def goToAPosition(self, x, y):
-        text = self.commands[2] + " " + str(x) + " " + str(y) + self.commands[3] + "\r"
-        self.com_stand.flushInput()
-        self.com_stand.write(text.encode())
-        cnt = 0
-        while True:
-            cnt += 1
-            res = self.com_stand.readline().strip()
-            if self.verbose:
-                print(res.strip())
-            if cnt > 500:
-                print("Cannot find ACK from the stand \r")
-                time.sleep(5)
-                self.goToAPosition(self, x, y)
+        if MOCK is False:
+            text = self.commands[2] + " " + str(x) + " " + str(y) + self.commands[3] + "\r"
+            self.com_stand.flushInput()
+            self.com_stand.write(text.encode())
+            cnt = 0
+            while True:
+                cnt += 1
+                res = self.com_stand.readline().strip()
+                if self.verbose:
+                    print(res.strip())
+                if cnt > 500:
+                    print("Cannot find ACK from the stand \r")
+                    time.sleep(5)
+                    self.goToAPosition(self, x, y)
 
-            if res.find('command_done'.encode()) != -1:
-                break
+                if res.find('command_done'.encode()) != -1:
+                    break
+        else:
+            pass
         time.sleep(0.1)
 
     def setXReferencePosition(self):

@@ -5,7 +5,7 @@ from TestStand import *
 
 # Mock devices
 MOCK_SUNS = False
-MOCK_STAND = False
+MOCK_STAND = True
 
 # 360 degrees = 128000 microsteps
 # 1 degree = ~ 355.56 microsteps
@@ -20,7 +20,7 @@ START_Y = 0
 STOP_Y = 128000
 STEP_Y = 160
 
-ITIME = 38
+ITIME = 255
 GAIN = 0
 
 if __name__ == '__main__':
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     if MOCK_SUNS is True:
         ip = 'localhost'
     else:
-        ip = '192.168.1.107'
+        ip = '192.168.2.101'
 
     stand = Stand(serialStand)
     suns = SunS(ITIME, GAIN, ip, 23)
