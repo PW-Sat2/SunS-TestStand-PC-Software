@@ -2,6 +2,8 @@ import socket
 import time
 from SunS import SunS
 from TestStand import *
+import socket
+import select
 
 # Mock devices
 MOCK_SUNS = False
@@ -20,7 +22,7 @@ START_Y = 0
 STOP_Y = 128000
 STEP_Y = 160
 
-ITIME = 255
+ITIME = 10
 GAIN = 0
 
 if __name__ == '__main__':
@@ -42,7 +44,11 @@ if __name__ == '__main__':
     if MOCK_SUNS is True:
         ip = 'localhost'
     else:
-        ip = '192.168.2.101'
+        ip = '192.168.2.100'
+
+    # Socket
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(('localhost', 2500))
 
     stand = Stand(serialStand)
     suns = SunS(ITIME, GAIN, ip, 23)
@@ -60,7 +66,7 @@ if __name__ == '__main__':
     stand.setXYReferencePosition()
     time.sleep(1)
 
-    print("Going back a little bit angle: " + str(-STEP_X) + " " + str(-STEP_Y) + "\r")
+    print("Going back a little bit - angle: " + str(-STEP_X) + " " + str(-STEP_Y) + "\r")
     stand.goToAPosition(-5000, -5000)
 
     #stand.goToAPosition(24888, 0)
@@ -78,8 +84,25 @@ if __name__ == '__main__':
             # Trigger and receive value from the SunS
             SunS_result = suns.measure()
             print(SunS_result.strip())
-            log.writelines(str(time.strftime("%H:%M:%S")) + ";" + str(x) + ";" + str(y) + ";" + str(stand.microstepsToDegrees(x)) + ";" + str(stand.microstepsToDegrees(y)) + ";" + SunS_result.strip() + "\r")
+            full_data = str(x) + ";" + str(y) + ";" + str(stand.microstepsToDegrees(x)) + ";" + str(stand.microstepsToDegrees(y)) + ";" + SunS_result.strip()
+            log.writelines(str(time.strftime("%H:%M:%S")) + ";" + full_data + "\r")
             log.flush()
+
+            # socket
+            try:
+                server.settimeout(0.01)
+                server.listen(1)
+                (connx, (ipx, portx)) = server.accept()
+                print("Connected\r")
+            except:
+                print("Except in connection\r")
+
+            try:
+                connx.send((full_data + '\r\n').encode())
+                print("Send data via TCP\r")
+            except:
+                print("Error in socket...")
+                #server.close()
         stand.setYReferencePosition()
     log.close()
     suns.close()
