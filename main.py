@@ -6,7 +6,7 @@ import socket
 import select
 
 # Mock devices
-MOCK_SUNS = False
+MOCK_SUNS = True
 MOCK_STAND = True
 
 # 360 degrees = 128000 microsteps

@@ -25,7 +25,7 @@ class Stand:
         self.com_stand = com_stand
         self.verbose = verbose
 
-        command_file = open('commands.txt', 'r')
+        command_file = open('commands.txt', 'r', encoding='latin-1')
 
         self.commands = []
         for line in command_file:

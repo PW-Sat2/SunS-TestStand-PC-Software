@@ -1,4 +1,5 @@
 import socket
+import time
 
 
 class SunS:
@@ -8,6 +9,7 @@ class SunS:
         self.ip = ip
         self.port = port
         self.esp_socket = socket.socket()
+        self.esp_socket.settimeout(1)
 
     def connect(self):
         self.esp_socket.connect((self.ip, self.port))
@@ -20,5 +22,8 @@ class SunS:
     def measure(self):
         data_to_send = "meas {} {}\n".format(self.itime, self.gain)
         self.esp_socket.send(data_to_send.encode())
-        rcv_data = self.esp_socket.makefile().readline().strip()
+        try:
+            rcv_data = self.esp_socket.makefile().readline().strip()
+        except:
+            rcv_data = "timeout"
         return rcv_data
